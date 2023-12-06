@@ -1,0 +1,32 @@
+==============================================================================================================================
+$$$1 @PrePersist and @PreUpdate
+===============================================================================================================================
+In this example, the @PrePersist and @PreUpdate annotations are used to automatically set the "created by" and "updated by" fields before an entity is persisted or updated in the database.
+
+public class YourEntity {
+    private String createdBy;
+    private String updatedBy;
+    // other fields 
+
+    // setters and getters
+
+    @PrePersist
+    protected void onCreate() {
+        // Set created by when an entity is persisted
+        this.createdBy = getCurrentUser();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        // Set updated by when an entity is updated
+        this.updatedBy = getCurrentUser();
+    }
+
+    private String getCurrentUser() {
+        // Logic to retrieve the current user from the security context or token
+        // This might involve extracting information from the authentication token
+        return "current_user_id";
+    }
+}
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++completed++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+

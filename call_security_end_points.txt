@@ -1,0 +1,72 @@
+If you want to call secured API endpoints from your project using `RestTemplate` without securing your own API, you still need to handle authentication on the client side. Below are the steps to call secured API endpoints from your Spring Boot project:
+
+1. **Use RestTemplate with OAuth 2.0:**
+
+   If the secured API uses OAuth 2.0 for authentication, you can use the `RestTemplate` along with the `OAuth2RestTemplate` from the Spring Security OAuth library. Here's an example:
+
+   ```java
+   import org.springframework.http.HttpMethod;
+   import org.springframework.http.ResponseEntity;
+   import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+
+   public class ApiService {
+
+       private final OAuth2RestTemplate restTemplate;
+
+       public ApiService(OAuth2RestTemplate restTemplate) {
+           this.restTemplate = restTemplate;
+       }
+
+       public void callSecuredApi() {
+           String apiUrl = "https://example.com/api/resource";
+           ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
+
+           // Handle the response as needed
+           String responseBody = response.getBody();
+           System.out.println(responseBody);
+       }
+   }
+   ```
+
+   You'll need to configure the `OAuth2RestTemplate` in your application, typically by creating a `@Bean` method in a configuration class.
+
+2. **Use RestTemplate with Bearer Token:**
+
+   If the secured API uses a token-based authentication mechanism, you can manually add the authentication token to the `RestTemplate` headers. Here's an example:
+
+   ```java
+   import org.springframework.http.HttpHeaders;
+   import org.springframework.http.HttpEntity;
+   import org.springframework.http.HttpMethod;
+   import org.springframework.http.ResponseEntity;
+   import org.springframework.web.client.RestTemplate;
+
+   public class ApiService {
+
+       private final RestTemplate restTemplate;
+
+       public ApiService(RestTemplate restTemplate) {
+           this.restTemplate = restTemplate;
+       }
+
+       public void callSecuredApi() {
+           String apiUrl = "https://example.com/api/resource";
+
+           // Set the authentication token in the headers
+           HttpHeaders headers = new HttpHeaders();
+           headers.set("Authorization", "Bearer yourAccessToken");
+
+           HttpEntity<String> entity = new HttpEntity<>(headers);
+
+           ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, String.class);
+
+           // Handle the response as needed
+           String responseBody = response.getBody();
+           System.out.println(responseBody);
+       }
+   }
+   ```
+
+   Replace `"yourAccessToken"` with the actual access token obtained from the authentication provider.
+
+Ensure that you have the necessary dependencies and configurations in your project to support the chosen authentication method. Additionally, handle token refresh and other aspects depending on the specific requirements of the secured API.

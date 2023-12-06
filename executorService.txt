@@ -1,0 +1,60 @@
+In Java, the `ExecutorService` framework provides a way to manage and control the execution of tasks in a multithreaded environment. If you want to perform some actions after the completion of all tasks submitted to an `ExecutorService`, you can use the `invokeAll` method along with a `Callable` that represents your tasks.
+
+Here's an example:
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+
+public class ExecutorServiceExample {
+    public static void main(String[] args) {
+        // Create an ExecutorService with a fixed thread pool size
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
+
+        // Create a list to hold your Callable tasks
+        List<Callable<String>> tasks = new ArrayList<>();
+
+        // Add some tasks to the list
+        for (int i = 0; i < 5; i++) {
+            final int taskId = i;
+            Callable<String> task = () -> {
+                // Simulate some task execution
+                Thread.sleep(1000);
+                return "Task " + taskId + " completed";
+            };
+            tasks.add(task);
+        }
+
+        try {
+            // Invoke all tasks and get a list of Future objects
+            List<Future<String>> futures = executorService.invokeAll(tasks);
+
+            // All tasks are completed at this point
+
+            // Do something after the completion of all tasks
+            System.out.println("All tasks completed. Performing post-completion actions...");
+
+            // Retrieve results from the Future objects if needed
+            for (Future<String> future : futures) {
+                System.out.println(future.get());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } finally {
+            // Shutdown the executor service
+            executorService.shutdown();
+        }
+    }
+}
+```
+
+In this example:
+
+1. We create an `ExecutorService` with a fixed thread pool size of 3.
+2. We create a list of `Callable` tasks and add them to the list.
+3. We use the `invokeAll` method to submit all tasks and obtain a list of `Future` objects.
+4. After the `invokeAll` method, all tasks are completed, and you can perform any post-completion actions.
+5. We print the results of each task by iterating through the `Future` objects.
+
+Finally, we shut down the `ExecutorService` to release its resources.

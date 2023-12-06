@@ -1,0 +1,146 @@
+
+================================================
+$$$1 Get current login user using spring security
+==================================================
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+// ...
+
+private String getCurrentUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    if (authentication != null && authentication.isAuthenticated()) {
+        return authentication.getName();
+    }
+
+    // If no authentication or authentication is not valid, you may return a default user or handle it accordingly.
+    return "anonymous_user";
+}
++++++++++++++++++++++++++++
+
+
+================================================
+$$$2 Get current login user using jwt token
+==================================================
+
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
+// ...
+
+private String getCurrentUser(String token) {
+    Claims claims = Jwts.parser()
+            .setSigningKey("your_secret_key")
+            .parseClaimsJws(token)
+            .getBody();
+
+    // Extract user information from claims
+    return claims.getSubject();
+}
++++++++++++++++++++++++++++++
+
+
+==================================================
+$$$3 Get current login user using javaEE security
+==================================================
+
+import javax.servlet.http.HttpServletRequest;
+
+// ...
+
+private String getCurrentUser() {
+    HttpServletRequest request = // obtain HttpServletRequest from your context (e.g., in a JAX-RS or servlet environment)
+
+    if (request != null && request.getUserPrincipal() != null) {
+        return request.getUserPrincipal().getName();
+    }
+
+    // If no user principal is available, you may return a default user or handle it accordingly.
+    return "anonymous_user";
+}
+
+===========================================
+$$$4 how to get the tokens
+===========================================
+
+In a Spring Boot application, obtaining the token from a request can be done by extracting it from the `Authorization` header for token-based authentication, or from a cookie or request parameter depending on your authentication setup. Below are examples for extracting tokens in different scenarios:
+
+### 1. **Token in Authorization Header (Bearer Token):**
+
+If your tokens are passed in the `Authorization` header using the Bearer token scheme, you can extract it as follows:
+
+```java
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.RequestHeader;
+
+@RestController
+public class YourController {
+
+    @GetMapping("/your-endpoint")
+    public ResponseEntity<String> yourEndpoint(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        // Extract the token from the Authorization header
+        String token = extractToken(authorizationHeader);
+
+        // Your logic here...
+
+        return ResponseEntity.ok("Token extracted: " + token);
+    }
+
+    private String extractToken(String authorizationHeader) {
+        // Assuming the header value is in the format "Bearer <token>"
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        }
+        return null;
+    }
+}
+```
+
+### 2. **Token in Cookie:**
+
+If your tokens are stored in cookies, you can extract them using the `@CookieValue` annotation:
+
+```java
+import org.springframework.web.bind.annotation.CookieValue;
+
+@RestController
+public class YourController {
+
+    @GetMapping("/your-endpoint")
+    public ResponseEntity<String> yourEndpoint(@CookieValue(name = "yourTokenCookie", required = false) String token) {
+        // Your logic here...
+
+        return ResponseEntity.ok("Token extracted: " + token);
+    }
+}
+```
+
+### 3. **Token in Request Parameter:**
+
+If your tokens are passed as request parameters, you can extract them using the `@RequestParam` annotation:
+
+```java
+import org.springframework.web.bind.annotation.RequestParam;
+
+@RestController
+public class YourController {
+
+    @GetMapping("/your-endpoint")
+    public ResponseEntity<String> yourEndpoint(@RequestParam(name = "token", required = false) String token) {
+        // Your logic here...
+
+        return ResponseEntity.ok("Token extracted: " + token);
+    }
+}
+```
+
+Choose the approach that best fits your authentication setup. Always ensure proper security measures, such as using HTTPS to encrypt the communication between the client and the server when dealing with tokens. Additionally, consider using established authentication and authorization mechanisms, such as OAuth 2.0, if applicable to your use case.
+
+
+
+
+
+

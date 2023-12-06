@@ -1,0 +1,58 @@
+In real-time applications, the choice of HTTP status codes often depends on the specific use case and the nature of the interaction between the client and server. Here are some common HTTP status codes and their use cases in real-time applications:
+
+1. **200 OK:**
+   - **Use Case:** Successful response to a GET or POST request, indicating that the request was successful, and the server is returning the requested data.
+
+2. **201 Created:**
+   - **Use Case:** Typically used after a successful POST request to indicate that a new resource has been successfully created.
+
+3. **204 No Content:**
+   - **Use Case:** Used when the server successfully processes a request but does not return any content, often in response to a DELETE request.
+
+4. **400 Bad Request:**
+   - **Use Case:** Indicates that the client has sent a malformed request to the server. For example, missing or invalid parameters in the request.
+
+5. **401 Unauthorized:**
+   - **Use Case:** The client must authenticate itself to get the requested response. Often used when the client is not authenticated or authentication credentials are invalid.
+
+6. **403 Forbidden:**
+   - **Use Case:** Similar to 401, but authentication will not help. The client does not have permission to access the requested resource.
+
+7. **404 Not Found:**
+   - **Use Case:** The server cannot find the requested resource. This is commonly used when a requested endpoint or resource does not exist.
+
+8. **429 Too Many Requests:**
+   - **Use Case:** The client has sent too many requests in a given amount of time. Used for rate limiting to prevent abuse.
+
+9. **500 Internal Server Error:**
+   - **Use Case:** Indicates that the server encountered an unexpected condition that prevented it from fulfilling the request. This is a generic error message returned when an unexpected situation occurs on the server.
+
+10. **503 Service Unavailable:**
+    - **Use Case:** The server is not ready to handle the request. Commonly used during maintenance or when the server is temporarily overloaded.
+
+Certainly! Here are some additional HTTP status codes and their use cases in real-time applications:
+
+11. **202 Accepted:**
+    - **Use Case:** Indicates that the request has been accepted for processing but not yet completed. The actual result may be asynchronous.
+
+12. **206 Partial Content:**
+    - **Use Case:** Used for range requests, indicating that the server is successfully fulfilling a partial GET request.
+
+13. **301 Moved Permanently:**
+    - **Use Case:** The requested resource has been permanently moved to another location, and the client should update its URL to the new one.
+
+14. **302 Found (or 307 Temporary Redirect):**
+    - **Use Case:** The requested resource has been temporarily moved to another location. The client should use the new URL for subsequent requests, but the original URL may still be used in the future.
+
+15. **304 Not Modified:**
+    - **Use Case:** Indicates that the client's cached version of the requested resource is still valid, and the server has not modified it since the last request.
+
+16. **500 Internal Server Error:**
+    - **Use Case:** Indicates that the server encountered an unexpected condition, preventing it from fulfilling the request.
+
+17. **503 Service Unavailable:**
+    - **Use Case:** The server is not ready to handle the request. It might be undergoing maintenance or experiencing temporary overloading.
+
+18. **504 Gateway Timeout:**
+    - **Use Case:** The server acting as a gateway or proxy did not receive a timely response from an upstream server.
+

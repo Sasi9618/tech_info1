@@ -1,0 +1,11 @@
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
+import java.util.List;
+
+public interface YourEntityRepository extends JpaRepository<YourEntity, Long> {
+
+    @Procedure(name = "your_stored_procedure")
+    List<YourEntity> callYourStoredProcedure(@Param("param1") String param1, @Param("param2") String param2);
+}
+
+

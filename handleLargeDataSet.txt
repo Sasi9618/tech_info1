@@ -1,0 +1,92 @@
+When dealing with large amounts of data in a database table and considering fetching that data in a Spring Boot application, you need to be mindful of performance, memory usage, and the overall efficiency of your solution. Here are several strategies you can consider:
+
+1. **Pagination:**
+   - Use pagination to fetch data in smaller chunks. This involves retrieving a limited number of records in each query, making it more manageable in terms of memory usage. Spring Data JPA supports pagination through methods like `findAll(Pageable pageable)`.
+
+     ```java
+     Page<User> findByLastName(String lastName, Pageable pageable);
+     ```
+
+   - Combine pagination with sorting to ensure consistent order across requests.
+
+2. **Streaming:**
+   - Use streaming to process large result sets without loading the entire dataset into memory. This is particularly useful when dealing with very large datasets.
+
+     ```java
+     @Query("SELECT u FROM User u")
+     Stream<User> findAllByCustomQueryAndStream();
+     ```
+
+3. **JPA Fetch Size:**
+   - Configure the fetch size for your JPA queries to control the number of records retrieved in each batch. This helps in optimizing memory usage.
+
+     ```java
+     @Query("SELECT u FROM User u")
+     @QueryHints(@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE, value = "50"))
+     List<User> findAllWithCustomFetchSize();
+     ```
+
+4. **Query Optimization:**
+   - Optimize your queries by selecting only the necessary columns and using appropriate indexing on your database tables. Avoid using `SELECT *` if you don't need all columns.
+
+5. **Asynchronous Processing:**
+   - Consider using asynchronous processing, especially when dealing with time-consuming operations. Spring's `@Async` annotation can be applied to methods to run them asynchronously.
+
+6. **Caching:**
+   - Use caching to store frequently accessed data in memory, reducing the need to fetch it from the database repeatedly.
+
+7. **Database-specific Optimizations:**
+   - Depending on your database, there may be specific optimizations or features that can enhance data retrieval performance. Check the documentation of your database system for recommendations.
+
+8. **Materialized Views:**
+   - Consider using materialized views if your application can tolerate slightly outdated data, and the cost of maintaining real-time accuracy is high.
+
+9. **Parallel Processing:**
+   - Depending on your use case, you might explore parallel processing techniques to fetch and process data concurrently. This can be beneficial in scenarios where network latency is a significant factor.
+
+10. **Denormalization:**
+    - If read performance is critical, consider denormalizing your data model to reduce the need for complex joins. This can improve query performance at the expense of increased storage.
+
+Choose the strategy or combination of strategies that best aligns with your application requirements, the nature of your data, and the expected usage patterns. It's often beneficial to profile and measure the performance of different approaches to find the most efficient solution for your specific use case.
+
+
+1 Pagination ---
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public Page<User> getAllUsersWithPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.findAll(pageable);
+    }
+}
+
+
+2 Streaming ---
+
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.repository.query.Param;
+
+import javax.persistence.QueryHint;
+import java.util.stream.Stream;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    @Query("SELECT u FROM User u")
+    @QueryHints(@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE, value = "50"))
+    Stream<User> findAllByCustomQueryAndStream();
+}
+
