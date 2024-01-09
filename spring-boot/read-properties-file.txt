@@ -1,0 +1,23 @@
+    @Configuration
+    @EnableConfigurationProperties
+    @ConfigurationProperties(prefix = "app")
+    public  class AppConfig {
+
+        private Map<String, String> properties;
+
+        // Getters and setters
+
+        public Map<String, String> getProperties() {
+            return properties;
+        }
+
+        public void setProperties(Map<String, String> properties) {
+            this.properties = properties;
+        }
+    }
+    
+    @Autowired
+    AppConfig appConfig;
+    
+    
+     @PropertySource("classpath:custom1.properties") to read custom property  file

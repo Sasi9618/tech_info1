@@ -1,0 +1,36 @@
+You are correct. The `@Component` annotation is not strictly required when using `@ConfigurationProperties` and `@EnableConfigurationProperties`. The `@Component` annotation is typically used to indicate that a class is a Spring-managed component and should be automatically discovered and registered as a Spring bean.
+
+In the case of configuration properties classes, it's common to use `@Configuration` in conjunction with `@EnableConfigurationProperties` without explicitly using `@Component`. Here's an example:
+
+```java
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
+@Configuration
+@EnableConfigurationProperties(DatabaseConfig.class)
+@ConfigurationProperties(prefix = "database")
+public class DatabaseConfig {
+
+    private String url;
+    private String username;
+    private String password;
+
+    // getters and setters
+
+    // Use the properties at the class level as needed
+    public void someMethod() {
+        System.out.println("Database URL: " + url);
+        System.out.println("Database Username: " + username);
+        System.out.println("Database Password: " + password);
+    }
+}
+```
+
+In this example:
+
+- `@Configuration` indicates that the class is a configuration class.
+- `@EnableConfigurationProperties(DatabaseConfig.class)` enables the processing of `DatabaseConfig` as a configuration properties class.
+- `@ConfigurationProperties(prefix = "database")` specifies the prefix for properties in the `application.yml` file.
+
+If you don't use `@Component`, you would need to ensure that the class is picked up by Spring's component scanning mechanism. This often involves placing the class in a package that is scanned by Spring or explicitly configuring component scanning in your application configuration. Using `@Configuration` often makes this unnecessary, as configuration classes are automatically detected by Spring.

@@ -30,3 +30,51 @@ public class YourEntity {
 }
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++completed++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+
+==========================================
+$$$2 @JsonBackReferences
+==========================================
+  ->This annotaion is used to many to many mapping assosiation.
+  
+  ->In one class we are mapping all details like @JoinColumn,@InversedJoinColumn. Then you no need mapped in another class
+    just we can write @JsonBackReferences.
+    
+  
+    
+    
+    
+    
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+=====================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
